@@ -3,11 +3,11 @@ package repo
 import (
 	"gorm.io/gorm"
 	"shop/global"
-	"shop/internal/pkg/model"
+	"shop/user/internal/pkg/model"
 )
 
-func GetUserList(page, pageSize int) ([]*model.Users, error) {
-	var users []*model.Users
+func GetUserList(page, pageSize int) ([]*model.UserM, error) {
+	var users []*model.UserM
 	result := global.DB.Scopes(Paginate(int(page), int(pageSize))).Find(&users)
 	if result.Error != nil {
 		return nil, result.Error
