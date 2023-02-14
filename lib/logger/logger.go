@@ -12,8 +12,8 @@ var lg *zap.Logger
 
 // zap日志库三部分，encoder（格式、字段名...）、输出位置(终端、文件)、日志级别
 
-// Init 初始化zap日志库
-func Init(cfg *config.LogConfig, mode string) error {
+// InitLogger 初始化zap日志库
+func InitLogger(cfg *config.LogConfig, mode string) error {
 	writeSyncer := getLogWriter(cfg)
 	encoder := getEncoder()
 	var l = new(zapcore.Level)
@@ -57,13 +57,3 @@ func getEncoder() zapcore.Encoder {
 	encoderConfig.EncodeCaller = zapcore.ShortCallerEncoder
 	return zapcore.NewJSONEncoder(encoderConfig)
 }
-
-//func GinLogger() gin.HandlerFunc {
-//	return func(c *gin.Context) {
-//		start := time.Now()
-//		path := &c.Request.URL.Path
-//		query := c.Request.URL.RawQuery
-//		c.Next()
-//		cost := time.Since(start)
-//	}
-//}

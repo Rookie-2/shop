@@ -1,7 +1,11 @@
-package shop
+package internal
 
 import (
+	"errors"
+	"github.com/gin-gonic/gin"
+	"net/http"
 	"shop/config"
+	"shop/lib/logger"
 	"shop/lib/register"
 	"shop/user/internal/shop/store"
 )
@@ -36,4 +40,25 @@ func initStore() error {
 	_ = store.NewStore(ins)
 
 	return nil
+}
+
+func startInsecureServer(g *gin.Engine) *http.Server {
+	httpSrv := &http.Server{Addr: "", Handler: g}
+	logger.Infow("start to insecure gin server...")
+	go func() {
+		if err := httpSrv.ListenAndServe(); err != nil && errors.Is(err, http.ErrServerClosed) {
+			logger.Errorw("start insecure gin server failed", "err", err)
+		}
+	}()
+	return httpSrv
+}
+
+func startSecureServer(g *gin.Engine) *http.Server {
+	httpSrv := &http.Server{Addr: "", Handler: g}
+	go func() {
+		if err := httpSrv.ListenAndServeTLS("", ""); err != nil && errors.Is(err, http.ErrServerClosed) {
+			logger.Errorw("start insecure gin server failed", "err", err)
+		}
+	}()
+	return httpSrv
 }
