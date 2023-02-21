@@ -3,7 +3,7 @@ package biz
 import "shop/user/internal/shop/store"
 
 type IBiz interface {
-	Users(store store.IStore) UserBiz
+	Users() UserBiz
 }
 
 type biz struct {
@@ -14,6 +14,6 @@ func NewBiz(store store.IStore) *biz {
 	return &biz{store: store}
 }
 
-func (b *biz) Users(store store.IStore) UserBiz {
-	return NewUserBiz(store)
+func (b *biz) Users() UserBiz {
+	return NewUserBiz(b.store)
 }
